@@ -5,6 +5,7 @@ import { findPackageJSON } from "node:module";
 
 
 export const index = async (req: Request, res: Response) => {
+  // Find
   interface Find {
     deleted: boolean,
     status?: string
@@ -18,9 +19,20 @@ export const index = async (req: Request, res: Response) => {
     find.status = req.query.status.toString();
   }
 
-  const tasks = await Task.find(find);
 
- 
+  // End Find
+
+  //Sort
+  const sort = {};
+
+  if(req.query.sortKey && req.query.sortValue) {
+    const sortKey = req.query.sortKey.toString();
+    sort[sortKey] = req.query.sortValue;
+  }
+  // End Sort
+  
+  const tasks = await Task.find(find).sort(sort);
+
   res.json(tasks);
 }
 
