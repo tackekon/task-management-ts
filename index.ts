@@ -18,6 +18,20 @@ app.get("/tasks", async (req: Request, res: Response) => {
   res.json(tasks);
 });
 
+app.get("/tasks/detail/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  // if (typeof id !== "string") {
+  //   return res.status(400).json({ message: "Invalid task ID" });
+  // }
+
+  const task = await Task.findOne({
+    _id: id,
+    deleted: false
+  });
+
+  res.json(task);
+});
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
