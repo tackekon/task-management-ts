@@ -64,10 +64,41 @@ export const index = async (req: Request, res: Response) => {
 
 export const detail = async (req: Request, res: Response) => {
   const id = req.params.id;
+  if (typeof id !== "string") {
+    return res.status(400).json({ message: "Invalid task ID" });
+  }
+
   const task = await Task.findOne({
     _id: id,
     deleted: false
   });
 
   res.json(task);
+};
+
+// [PATCH] /api/v1/tasks/change-status/:id
+export const changeStatus = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  if (typeof id !== "string") {
+    return res.status(400).json({
+      code: 400,
+      message: "ID không hợp lệ."
+    });
+  }
+
+  try {
+    const status: string = req.body.status;
+
+    await Task.updateOne({_id: id}, {status: status});
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công."
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Không tồn tại."
+    });
+  }
+
 };
