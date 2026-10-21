@@ -128,7 +128,25 @@ export const changeMulti = async (req: Request, res: Response) => {
           message: "Cập nhật trạng thái thành công!"
         });
         break;
+      case "delete":
+        await Task.updateMany(
+          {
+            _id: { $in: ids}
+          }, 
+          {
+            deleted: true,
+            deletedAt: new Date()
+          });
+          res.json({
+            code: 200,
+            message: "Xoá thành công!"
+          });
+          break;
       default:
+        res.json({
+          code: 400,
+          message: "Không tồn tại!"
+        });
         break;
     }
 
